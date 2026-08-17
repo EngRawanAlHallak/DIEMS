@@ -23,7 +23,6 @@ class ApproveEventRequestAction extends BaseAction
 
         return $lock->block(5, function () use ($eventRequest) {
 
-            // استخدام executeAction لتغليف العملية وتسجيل اللوج عند النجاح أو رمي الخلل
             return $this->executeAction(
                 function () use ($eventRequest) {
 
@@ -72,7 +71,14 @@ class ApproveEventRequestAction extends BaseAction
                     broadcast(new SlotAvailabilityChanged($slot->id, false));
 
                     // 7. مسح الكاش
-                    //Cache::tags(['events_timeline'])->flush();
+                    Cache::forget("admin:events_timeline:all");
+                    Cache::forget("admin:event_request_detail:{$eventRequest->id}");
+                    Cache::forget("admin:dashboard:super_stats");
+                    Cache::forget("events:show:{$eventRequest->id}");
+
+                    foreach ($competingRequests as $competing) {
+                        Cache::forget("admin:event_request_detail:{$competing->id}");
+                    }
                     return $eventRequest;
                 },
                 [

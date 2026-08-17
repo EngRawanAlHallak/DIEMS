@@ -15,7 +15,7 @@ class GetProfileAction
     {
         $lang = app()->getLocale();
 
-        Cache::forget("exhibition_profile_{$lang}");
+        //Cache::forget("exhibition_profile_{$lang}");
         return Cache::rememberForever("exhibition_profile_{$lang}", function () {
             $profile = ExhibitionProfile::first();
 

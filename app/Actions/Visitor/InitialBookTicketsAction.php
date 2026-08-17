@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Actions\Admin\Tickets;
+namespace App\Actions\Visitor;
 
 use App\Actions\Payment\InitiateTicketPaymentAction;
-use App\Models\TicketOrder;
 use App\Models\Ticket;
+use App\Models\TicketOrder;
 use App\Models\TicketType;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\RateLimiter;
 
 class InitialBookTicketsAction
 {

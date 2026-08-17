@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('exhibition_profiles', function (Blueprint $table) {
             $table->id();
             $table->jsonb('name');
+            $table->string('image')->nullable();
             $table->string('session'); //دورته ال 63
             $table->jsonb('address');
             $table->jsonb('bio');

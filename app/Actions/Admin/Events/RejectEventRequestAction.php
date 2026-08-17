@@ -5,6 +5,7 @@ namespace App\Actions\Admin\Events;
 use App\Actions\General\BaseAction;
 use App\Models\EventRequest;
 use App\Jobs\Event\SendEventStatusEmailJob;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 
 class RejectEventRequestAction extends BaseAction
@@ -26,6 +27,8 @@ class RejectEventRequestAction extends BaseAction
                 // إرسال إيميل الرفض
                 dispatch(new SendEventStatusEmailJob($eventRequest, 'rejected'));
 
+                Cache::forget("admin:event_request_detail:{$requestId}");
+                Cache::forget("admin:dashboard:super_stats");
                 return $eventRequest;
             },
             [

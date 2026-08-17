@@ -15,6 +15,7 @@ class ExhibitionProfile extends Model
 
     protected $fillable = [
         'name',
+        'image',
         'session',
         'address',
         'bio',

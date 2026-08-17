@@ -6,6 +6,7 @@ use App\Actions\General\BaseAction;
 use App\Models\ExhibitionProfile;
 use App\Jobs\Company\ProcessMediaUploadJob;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Cache;
 
 class UpdateVisitorAppContentAction extends BaseAction
 {
@@ -20,6 +21,8 @@ class UpdateVisitorAppContentAction extends BaseAction
                 unset($data['syria_logo'], $data['welcome_video']);
 
                 $profile->update($data);
+
+                Cache::forget('welcome_page');
 
                 if ($syriaLogo instanceof UploadedFile && $syriaLogo->isValid()) {
                     $tempPath = $syriaLogo->store('temp', 'local');

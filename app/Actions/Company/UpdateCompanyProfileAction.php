@@ -5,6 +5,7 @@ namespace App\Actions\Company;
 use App\Actions\General\BaseAction;
 use App\Actions\General\TranslateTextAction;
 use App\Models\Company;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class UpdateCompanyProfileAction extends BaseAction
@@ -44,6 +45,9 @@ class UpdateCompanyProfileAction extends BaseAction
             $company->update($companyData);
             $properties = !empty($userChanges) ? ['user_updates' => $userChanges] : [];
             $properties['event_type'] = 'profile_updated';
+
+            Cache::forget("company:detail:{$company->id}");
+
             return $company->fresh(['user']);
 
         }, [

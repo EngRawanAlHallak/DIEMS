@@ -70,6 +70,4 @@ class EventController extends Controller
             //return redirect()->away($errorUrl);
         }
     }
-
-
 }

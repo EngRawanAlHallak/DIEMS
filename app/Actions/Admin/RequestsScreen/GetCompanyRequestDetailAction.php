@@ -11,8 +11,7 @@ class GetCompanyRequestDetailAction
     public function execute(int $id)
     {
         $cacheKey = "admin:company_request_detail:{$id}";
-        Cache::forget($cacheKey);
-        //return Cache::tags(['company_requests'])->remember($cacheKey, now()->addHours(4), function () use ($id) {
+        //Cache::forget($cacheKey);
         return Cache::remember($cacheKey, now()->addHours(4),function () use ($id) {
 
             $companyRequest = CompanyRequest::query()

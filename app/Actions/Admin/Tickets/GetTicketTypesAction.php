@@ -8,11 +8,10 @@ use Illuminate\Support\Facades\Cache;
 
 class GetTicketTypesAction
 {
-
     public function execute()
     {
-        Cache::forget("admin:ticket-types");
-        return Cache::rememberForever("admin:ticket-types", function () {
+        //Cache::forget("admin:ticket-types");
+        return Cache::rememberForever("admin:ticket_types", function () {
 
             $tickets = TicketType::orderBy('created_at', 'desc')->get();
             return TicketTypeResource::collection($tickets)->resolve();

@@ -17,7 +17,7 @@ class GetJoinedCompaniesAction
         }
 
         // إذا لم يكن هناك بحث، نجلب البيانات من الكاش
-        Cache::forget("admin:Joined_companies");
+        //Cache::forget("admin:Joined_companies");
         return Cache::remember('admin:Joined_companies', now()->addDays(1), function () {
             $companies = $this->queryCompanies()->get();
             return JoinedCompanyResource::collection($companies)->resolve();

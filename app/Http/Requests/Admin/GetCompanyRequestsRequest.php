@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Admin;
 use Illuminate\Foundation\Http\FormRequest;
 
-class OrderRequest extends FormRequest
+class GetCompanyRequestsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,7 +21,7 @@ class OrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'request_status' => ['nullable','in:all,pending,approved,rejected'],
+            'request_status' => ['nullable','in:all,pending,approved,rejected,expired,action_required'],
             'payment_status' => ['nullable','in:all,paid,unpaid,partial_paid'],
             'date'           => ['nullable','date_format:Y-m-d'],
             'search'         => ['nullable','string','max:255'],

@@ -11,7 +11,7 @@ class GetTicketMetricsAction
     public function execute(): array
     {
         // استخدام الكاش لمدة 10 دقائق لتخفيف الضغط على الداتا بيز (يتحدث تلقائياً)
-        return Cache::remember('admin_ticket_metrics', 600, function () {
+        return Cache::remember('admin:ticket_metrics', 600, function () {
 
             $totalRevenue = TicketOrder::where('payment_status', 'paid')->sum('total_amount');
 

@@ -5,6 +5,7 @@ namespace App\Actions\Admin\Halls;
 use App\Http\Resources\CompanyRequestResource;
 use App\Models\Booth;
 use App\Models\CompanyRequest;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class AutoAssignBoothsAction
@@ -44,6 +45,9 @@ class AutoAssignBoothsAction
                         'company_request_id' => $request->id,
                         'company_id'         => $request->company?->id,
                     ]);
+
+                    Cache::forget("admin:company_details:{$request->company?->id}");
+                    Cache::forget("admin:hall:{$suitableBooth->hall_id}");
 
                     $results['assigned_count']++;
                 } else {

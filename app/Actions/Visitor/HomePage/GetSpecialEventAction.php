@@ -9,7 +9,7 @@ class GetSpecialEventAction
 {
     public function execute(string $date, string $lang)
     {
-        Cache::forget("home:special_event:{$date}:{$lang}");
+        //Cache::forget("home:special_event:{$date}:{$lang}");
         return Cache::remember("home:special_event:{$date}:{$lang}", now()->addHours(2), function () use ($date) {
             return EventRequest::query()
                 ->where('request_status', 'approved')

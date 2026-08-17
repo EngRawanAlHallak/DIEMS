@@ -29,8 +29,9 @@ class UpdateTicketTypeAction extends BaseAction
 
                 $ticketType->update($data);
 
-                Cache::forget("admin:ticket-types");
-                Cache::forget('admin_ticket_metrics');
+                Cache::forget("admin:ticket_types");
+                Cache::forget('admin:ticket_metrics');
+                Cache::forget("admin:active_ticket_types");
 
                 return $ticketType;
             },

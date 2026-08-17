@@ -203,10 +203,10 @@ class DataSeeder extends Seeder
             $req1->setup_preference = 'Equipped Booth';
             $req1->terms_accepted_at = now();
             $req1->request_status = 'approved'; // مقبول
-            $req1->payment_status = 'paid';     // مدفوع
+            $req1->payment_status = 'partial_paid';     // مدفوع
             $req1->total_price = 4500.00;
             $req1->required_deposit = 1500.00;
-            $req1->paid_amount = 4500.00;
+            $req1->paid_amount = 2000.00;
             $req1->payment_due_date = now()->addDays(7);
             $req1->save();
 

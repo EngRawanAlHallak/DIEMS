@@ -24,7 +24,9 @@ class DeleteTicketTypeAction extends BaseAction
                 $deletedTicketType = $ticketType;
                 $ticketType->delete();
 
-                Cache::forget("admin:ticket-types");
+                Cache::forget("admin:ticket_types");
+                Cache::forget("admin:active_ticket_types");
+                Cache::forget('admin:ticket_metrics');
 
                 return $deletedTicketType;
             },

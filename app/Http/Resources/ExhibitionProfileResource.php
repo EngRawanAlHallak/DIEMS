@@ -16,6 +16,7 @@ class ExhibitionProfileResource extends JsonResource
         return [
             'id'      => $this->id,
             'name'    => $this->name,
+            'image'   => $this->image ? Storage::disk('s3')->url($this->image) : null,
             'session' => $this->session,
             'address' => $this->address,
             'bio'     => $this->bio,

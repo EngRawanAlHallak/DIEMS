@@ -15,7 +15,7 @@ class GetTransportationAction
     {
         $lang = app()->getLocale();
 
-        Cache::forget("transportation_page_{$lang}");
+        //Cache::forget("transportation_page_{$lang}");
         return Cache::rememberForever("transportation_page_{$lang}", function () use ($lang) {
             $profile = ExhibitionProfile::first();
 

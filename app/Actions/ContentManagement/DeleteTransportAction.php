@@ -4,6 +4,7 @@ namespace App\Actions\ContentManagement;
 
 use App\Actions\General\BaseAction;
 use App\Models\Transportation;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class DeleteTransportAction extends BaseAction
@@ -18,6 +19,10 @@ class DeleteTransportAction extends BaseAction
 
                 $model = $transport;
                 $transport->delete();
+
+                Cache::forget('transportation_page_ar');
+                Cache::forget('transportation_page_en');
+
                 return $model;
             },
             [

@@ -23,7 +23,7 @@ class GetCompaniesSearchBar
             $companies = $this->fetchCompanies($sectorId, $search);
         }
         elseif ($sectorId) {
-            Cache::forget("companies:by_sector:{$sectorId}");
+            //Cache::forget("companies:by_sector:{$sectorId}");
             $companies = Cache::remember("companies:by_sector:{$sectorId}", now()->addMinutes(30),
                 fn() => $this->fetchCompanies($sectorId)
             );

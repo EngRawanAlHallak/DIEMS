@@ -4,6 +4,7 @@ namespace App\Actions\ContentManagement;
 
 use App\Actions\General\BaseAction;
 use App\Models\ExhibitionProfile;
+use Illuminate\Support\Facades\Cache;
 
 class UpdateTransportSettingsAction extends BaseAction
 {
@@ -18,6 +19,9 @@ class UpdateTransportSettingsAction extends BaseAction
                     'transport_start_time'       => $data['transport_start_time'] ?? $profile->transport_start_time,
                     'transport_end_time'         => $data['transport_end_time'] ?? $profile->transport_end_time,
                 ]);
+
+                Cache::forget('transportation_page_ar');
+                Cache::forget('transportation_page_en');
 
                 return $profile;
             },

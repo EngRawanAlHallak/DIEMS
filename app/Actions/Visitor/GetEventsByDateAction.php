@@ -20,7 +20,7 @@ class GetEventsByDateAction
     {
         $lang = app()->getLocale();
 
-        Cache::forget("events:by_date:{$date}:{$lang}");
+        //Cache::forget("events:by_date:{$date}:{$lang}");
         $events = Cache::remember("events:by_date:{$date}:{$lang}", now()->addMinutes(10), function () use ($date) {
             return EventRequest::query()
                 ->paid()

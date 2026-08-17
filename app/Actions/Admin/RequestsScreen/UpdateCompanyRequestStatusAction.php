@@ -5,6 +5,7 @@ namespace App\Actions\Admin\RequestsScreen;
 use App\Actions\General\BaseAction;
 use App\Jobs\Company\SendCompanyRequestStatusEmailJob;
 use App\Models\CompanyRequest;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\ValidationException;
 
@@ -82,6 +83,8 @@ class UpdateCompanyRequestStatusAction extends BaseAction
                     dispatch(new SendCompanyRequestStatusEmailJob($companyRequest, $status, $adminNotes, $amendmentUrl));
                 }
 
+                Cache::forget("admin:company_request_detail:{$requestId}");
+                Cache::forget("admin:dashboard:super_stats");
                 return $companyRequest;
             },
             [

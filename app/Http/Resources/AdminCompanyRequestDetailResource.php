@@ -48,10 +48,6 @@ class AdminCompanyRequestDetailResource extends JsonResource
             // الحالات المالية وحالة الطلب
             'request_status'      => $this->request_status,
             'payment_status'      => $this->payment_status,
-            //'total_price'         => (float) $this->total_price,
-            //'required_deposit'    => (float) $this->required_deposit,
-            //'paid_amount'         => (float) $this->paid_amount,
-            //'payment_due_date'    => $this->payment_due_date,
             'requested_at'          => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
 
             // قسم المستندات المرفوعة (تُعرض فقط إذا تم عمل Eager Load لها للأداء العالي)

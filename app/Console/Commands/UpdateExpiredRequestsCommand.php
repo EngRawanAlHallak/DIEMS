@@ -9,6 +9,7 @@ use App\Models\TicketOrder;
 use App\Models\Payment;
 use App\Models\CompanyRequest;
 use App\Models\EventRequest;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -35,7 +36,7 @@ class UpdateExpiredRequestsCommand extends Command
 
                 foreach ($expiredCompanyRequests as $request) {
                     $request->update(['request_status' => 'expired']);
-
+                    Cache::forget("admin:company_request_detail:{$request->id}");
                     // إطلاق Job إرسال الإيميل للشركة
                     SendExpiredNotificationEmailJob::dispatch($request->email, $request->getTranslation('company_name', 'en', false) ?? $request->getTranslation('company_name', 'ar'), 'company');
                 }
@@ -50,12 +51,19 @@ class UpdateExpiredRequestsCommand extends Command
                 foreach ($expiredEventRequests as $request) {
                     $request->update(['request_status' => 'expired']);
 
+                    Cache::forget("admin:event_request_detail:{$request->id}");
+                    Cache::forget("events:show:{$request->id}");
+
                     // تحرير السلوت ليعود متاحاً
                     EventSlot::where('id', $request->slot_id)->update(['available' => true]);
 
                     // إطلاق Job إرسال الإيميل لمنظم الفعالية
                     SendExpiredNotificationEmailJob::dispatch($request->organizer_email, $request->organizer_name, 'event');
                 }
+
+                Cache::forget("admin:events_timeline:all");
+                Cache::forget("company:events_timeline:all");
+
                 $this->info("Updated {$expiredEventRequests->count()} event requests to expired.");
             });
 

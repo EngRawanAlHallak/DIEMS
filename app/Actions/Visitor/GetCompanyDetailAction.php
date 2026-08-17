@@ -11,7 +11,7 @@ class GetCompanyDetailAction
 {
     public function execute(Company $company): Company
     {
-        Cache::forget("company:detail:{$company->id}");
+        //Cache::forget("company:detail:{$company->id}");
         return Cache::remember("company:detail:{$company->id}", now()->addMinutes(15),
                 fn () => $this->loadRelations($company)
             );

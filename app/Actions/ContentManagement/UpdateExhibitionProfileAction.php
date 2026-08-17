@@ -35,6 +35,10 @@ class UpdateExhibitionProfileAction extends BaseAction
 
                 $profile->fill($data)->save();
 
+                if (isset($data['contact_email'])) {
+                    Cache::forget('exhibition_contact_email');
+                }
+
                 $this->syncWithCompanySettings($profile);
 
                 return $profile;
@@ -95,5 +99,9 @@ class UpdateExhibitionProfileAction extends BaseAction
 
         Cache::forget('global_settings_ar');
         Cache::forget('global_settings_en');
+        Cache::forget('exhibition_profile_ar');
+        Cache::forget('exhibition_profile_en');
+        Cache::forget('home:address:ar');
+        Cache::forget('home:address:en');
     }
 }

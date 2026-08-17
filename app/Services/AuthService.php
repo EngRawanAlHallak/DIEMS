@@ -43,11 +43,12 @@ class AuthService
 
             $user->update(['fcm_token' => $fcm_token]);
         }
-        /*if ($user->hasRole('admin') && $isEmail) {
+
+        if ($user->company && ! $user->company->is_active) {
             throw ValidationException::withMessages([
-                'identifier' => ['Invalid credentials, enter your username again.'],
+                'identifier' => ['Your company account has been deactivated by the administrator.'],
             ]);
-        }*/
+        }
 
         // 3. Account locked
         if ($user->isLocked()) {

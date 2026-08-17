@@ -18,7 +18,8 @@ class ToggleTicketTypeStatusAction extends BaseAction
                     'is_active' => !$ticketType->is_active
                 ]);
 
-                Cache::forget("admin:ticket-types");
+                Cache::forget("admin:ticket_types");
+                Cache::forget("admin:active_ticket_types");
 
                 return $ticketType;
             },

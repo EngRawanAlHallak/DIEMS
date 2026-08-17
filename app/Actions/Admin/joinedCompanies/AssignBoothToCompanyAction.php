@@ -40,8 +40,9 @@ class AssignBoothToCompanyAction extends BaseAction
                 ]);
 
                 // مسح الكاش
-                Cache::forget("company:detail:{$companyId}");
+                Cache::forget("admin:hall:{$booth->hall_id}");
                 Cache::forget("admin:company_details:{$companyId}");
+                Cache::forget("company:detail:{$companyId}");
 
                 return $company;
             },

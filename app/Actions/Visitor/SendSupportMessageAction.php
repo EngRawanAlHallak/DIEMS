@@ -3,7 +3,7 @@
 namespace App\Actions\Visitor;
 
 use App\Http\Resources\EventResource;
-use App\Jobs\Company\Notification\SendAdminNotificationJob;
+use App\Jobs\Notification\SendAdminNotificationJob;
 use App\Mail\SupportMessageMail;
 use App\Models\ExhibitionProfile;
 use App\Models\User;

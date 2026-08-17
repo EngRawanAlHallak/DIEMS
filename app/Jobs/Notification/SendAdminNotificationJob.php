@@ -72,7 +72,7 @@ class SendAdminNotificationJob implements ShouldQueue
             ]);
 
             // رفع إصدار الكاش لكي تظهر النوتيفيكيشن الجديدة فورا للأدمن
-            // Cache::increment('admin_notifications_version');
+            Cache::increment('admin_notifications_version');
         } else {
             // رمي استثناء لكي يعيد الـ Job المحاولة (Tries)
             throw new \Exception('Firebase FCM Error: ' . $response->body());

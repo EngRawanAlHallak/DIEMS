@@ -14,8 +14,8 @@ class GetCompanyRequestsAction
         $cacheKey = "company:{$company->id}:requests_dashboard";
         Cache::forget($cacheKey);
 
-        return Cache::tags(['company_requests', "company_{$company->id}_requests"])
-            ->remember($cacheKey, now()->addHours(2), function () use ($company) {
+        //return Cache::tags(['company_requests', "company_{$company->id}_requests"])
+        return Cache::remember($cacheKey, now()->addHours(2), function () use ($company) {
 
                 $requests = $company->requests()
                     ->with([

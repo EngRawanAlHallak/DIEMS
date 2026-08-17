@@ -42,7 +42,8 @@ use App\Actions\Visitor\HomePage\GetSectorsAction;
 use App\Http\Requests\Admin\AddBoothRequest;
 use App\Http\Requests\Admin\AddHallRequest;
 use App\Http\Requests\Admin\AddSlotRequest;
-use App\Http\Requests\Admin\OrderRequest;
+use App\Http\Requests\Admin\GetCompanyRequestsRequest;
+use App\Http\Requests\Admin\GetEventRequestsRequest;
 use App\Http\Requests\Admin\UpdateHallRequest;
 use App\Http\Resources\ActivityLogResource;
 use App\Http\Resources\SectorResource;
@@ -55,7 +56,7 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
     use ApiResponse;
-    public function getCompanyRequests(OrderRequest $request, GetCompanyRequestsAction $action): JsonResponse
+    public function getCompanyRequests(GetCompanyRequestsRequest $request, GetCompanyRequestsAction $action): JsonResponse
     {
         $data = $action->execute($request->validated());
 
@@ -78,7 +79,7 @@ class AdminController extends Controller
         $action->execute($validated['request_id'], $validated['status'], $validated['admin_notes']);
         return $this->success(null, 'Company status updated successfully');
     }
-    public function getEventRequests(OrderRequest $request, GetEventRequestsAction $action): JsonResponse
+    public function getEventRequests(GetEventRequestsRequest $request, GetEventRequestsAction $action): JsonResponse
     {
         $data = $action->execute($request->validated());
 

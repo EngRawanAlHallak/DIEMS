@@ -50,10 +50,9 @@ class AssignHallToEventAction extends BaseAction
                 ]);
 
                 // 5. مسح الكاش لتحديث المخطط الزمني
-                //Cache::tags(['events'])->flush();
-                Cache::forget("events:show:{$eventRequestId}:en");
-                Cache::forget("events:show:{$eventRequestId}:ar");
-                Cache::forget("admin:events_timeline:approved");
+                Cache::forget("admin:event_request_detail:{$eventRequestId}");
+                Cache::forget("admin:events_timeline:all");
+                Cache::forget("events:show:{$eventRequestId}");
 
                 return $eventRequest;
             },

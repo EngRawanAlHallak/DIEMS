@@ -14,7 +14,10 @@ class NullBoothAction
         $booth->update([
             'company_id' => null,
         ]);
+
         Cache::forget("admin:hall:{$booth->hall_id}");
+        Cache::forget("admin:company_details:{$booth->company_id}");
+
         return true;
     }
 }

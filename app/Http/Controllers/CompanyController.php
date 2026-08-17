@@ -556,8 +556,8 @@ class CompanyController extends Controller
 
         $result = $action->execute($request->request_id, (float) $request->amount);
         $paymeraUrl = is_array($result) ? $result['payment_url'] : $result;
-        return redirect()->away($paymeraUrl);
-        //return $this->success($result, 'payment successfully');
+        //return redirect()->away($paymeraUrl);
+        return $this->success($result, 'payment successfully');
     }
 
     public function verifyPayment(Request $request, PaymeraService $paymeraService): JsonResponse

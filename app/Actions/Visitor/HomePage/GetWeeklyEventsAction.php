@@ -10,8 +10,7 @@ class GetWeeklyEventsAction
 {
     public function execute(string $startDate, string $endDate, string $lang)
     {
-        Cache::forget("home:weekly_events:{$startDate}:{$lang}");
-        Cache::forget("home:weekly_events:{$startDate}:{$lang}");
+        //Cache::forget("home:weekly_events:{$startDate}:{$lang}");
         return Cache::remember("home:weekly_events:{$startDate}:{$lang}", now()->addHours(2), function () use ($startDate, $endDate) {
             return EventRequest::query()
                 ->paid() // استخدام الـ Scope الذي أنشأناه

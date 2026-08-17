@@ -18,7 +18,7 @@ class GetEventDetailAction
         $lang = app()->getLocale();
 
         //Cache::forget("events:show:{$id}");
-        $event = Cache::remember("events:show:{$id}:{$lang}", now()->addMinutes(30), function () use ($id) {
+        $event = Cache::remember("events:show:{$id}", now()->addMinutes(30), function () use ($id) {
             return EventRequest::paid()
                 ->with([
                     'slot:id,slot_date,start_time,end_time',

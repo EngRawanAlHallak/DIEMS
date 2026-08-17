@@ -21,6 +21,8 @@ class ActiveCompanyStatusAction extends BaseAction
                 }
 
                 Cache::forget("admin:Joined_companies");
+                Cache::forget("admin:company_details:{$company->id}");
+                Cache::forget("company:detail:{$company->id}");
 
                 return $company;
             },

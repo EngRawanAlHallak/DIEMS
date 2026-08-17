@@ -4,6 +4,7 @@ namespace App\Actions\Payment;
 
 use App\Models\EventRequest;
 use App\Services\PaymeraService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
@@ -36,7 +37,7 @@ class InitiateEventPaymentAction
 
             // تحديث حالة طلب الشركة إلى "منتهي الصلاحية"
             $eventRequest->update(['status' => 'expired']);
-
+            Cache::forget("admin:event_request_detail:{$eventRequest->id}");
             throw new \Exception('The payment link has expired (72 hours exceeded). Please contact exhibition support.');
         }
 

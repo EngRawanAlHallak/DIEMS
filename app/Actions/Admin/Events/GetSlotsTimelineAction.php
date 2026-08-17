@@ -12,7 +12,7 @@ class GetSlotsTimelineAction
     public function execute(): array
     {
         $cacheKey = "admin:events_timeline:all";
-        Cache::forget("admin:events_timeline:all");
+        //Cache::forget("admin:events_timeline:all");
         return Cache::remember($cacheKey, now()->addDays(1), function () {
 
             // 1. جلب كل الأوقات (Slots) مع الطلبات الموافق عليها فقط

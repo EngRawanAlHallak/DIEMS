@@ -7,6 +7,7 @@ use App\Models\CompanyRequest;
 use App\Models\EventRequest;
 use App\Models\Payment;
 use App\Models\TicketOrder;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -116,7 +117,8 @@ class PaymeraService
                 if ($payable instanceof TicketOrder) {
                     $payable->update(['payment_status' => 'paid']);
                     $payable->tickets()->update(['status' => 'valid']);
-                    // هنا يمكن إرسال إيميل التذاكر
+                    Cache::forget("visitor:tickets:{$payable->guest_id}");
+
                 } elseif ($payable instanceof CompanyRequest) {
                     /*$payable->update(['payment_status' => 'partial_paid']);
                     $payable->update(['paid_amount' => $payable->required_deposit]);
@@ -135,6 +137,7 @@ class PaymeraService
                         'paid_amount'    => $newPaidAmount,
                         'payment_status' => $newStatus,
                     ]);
+                    Cache::forget("admin:company_request_detail:{$payable->id}");
 
                     // 3. التحقق مما إذا كان هذا هو "الدفع الأول" لإنشاء حساب الشركة
                     if (!$payable->company()->exists()) {
@@ -142,13 +145,14 @@ class PaymeraService
                     }
 
                     // 4. مسح كاش لوحة تحكم هذه الشركة تحديداً
-                    //Cache::tags(['company_requests', "company_{$payable->company_id}_requests"])->flush();
-
+                    Cache::forget("company:{$payable->company->id}:requests_dashboard");
                     Log::info("Company Request updated: Amount Paid: {$newPaidAmount}, Status: {$newStatus}");
+
                 }elseif ($payable instanceof EventRequest) {
                     $payable->update(['payment_status' => 'paid']);
+                    Cache::forget("admin:event_request_detail:{$payable->id}");
+                    Cache::forget("events:show:{$payable->id}");
                     Log::info("event status updated to paid ");
-                    // Cache::forget('admin:company_requests:*');
                 }
                 Log::info("done in service: verify ",['eventRequest' => $payable]);
             });

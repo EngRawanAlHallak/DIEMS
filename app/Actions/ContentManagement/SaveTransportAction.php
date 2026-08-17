@@ -7,6 +7,7 @@ use App\Actions\General\TranslateTextAction;
 use App\Models\Transportation;
 use App\Jobs\Company\ProcessMediaUploadJob;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Cache;
 
 class SaveTransportAction extends BaseAction
 {
@@ -33,6 +34,9 @@ class SaveTransportAction extends BaseAction
 
                 // 2. حفظ بيانات الخط
                 $transport->fill($data)->save();
+
+                Cache::forget('transportation_page_ar');
+                Cache::forget('transportation_page_en');
 
                 // 3. رفع صورة الخط عبر الـ Job
                 if ($image instanceof UploadedFile && $image->isValid()) {

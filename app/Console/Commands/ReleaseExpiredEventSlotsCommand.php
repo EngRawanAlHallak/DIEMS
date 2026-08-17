@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\EventRequest;
 use App\Models\EventSlot;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -38,11 +39,13 @@ class ReleaseExpiredEventSlotsCommand extends Command
                 ]);
 
                 $count++;
-
+                Cache::forget("admin:event_request_detail:{$request->id}");
                 Log::info("تم إلغاء الطلب رقم (#{$request->id}) وتحرير الفتحة الزمنية رقم ({$request->slot_id}) بسبب عدم الدفع.");
             });
         }
 
+        Cache::forget("admin:events_timeline:all");
+        Cache::forget("company:events_timeline:all");
         $this->info("تم بنجاح تحرير وإلغاء {$count} طلبات فعاليات منتهية الصلاحية.");
         return Command::SUCCESS;
     }

@@ -7,6 +7,7 @@ use App\Models\EventRequest;
 use App\Models\EventSlot;
 use App\Events\SlotAvailabilityChanged;
 use App\Jobs\Event\SendEventStatusEmailJob;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 
 class CancelEventRequestAction extends BaseAction
@@ -31,7 +32,10 @@ class CancelEventRequestAction extends BaseAction
                     broadcast(new SlotAvailabilityChanged($slot->id, true));
 
                     // تحديث الكاش
-                    //Cache::tags(['events_timeline'])->flush();
+                    Cache::forget("admin:events_timeline:all");
+                    Cache::forget("admin:event_request_detail:{$requestId}");
+                    Cache::forget("admin:dashboard:super_stats");
+                    Cache::forget("events:show:{$requestId}");
                 }
                 else{
                     throw ValidationException::withMessages([

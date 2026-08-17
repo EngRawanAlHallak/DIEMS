@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Admin\Statistics\GetTicketMetricsAction;
-use App\Actions\Admin\Tickets\InitialBookTicketsAction;
+use App\Actions\Admin\Tickets\CreateTicketTypeAction;
 use App\Actions\Admin\Tickets\DeleteTicketTypeAction;
+use App\Actions\Admin\Tickets\GenerateDailyGateCodeAction;
 use App\Actions\Admin\Tickets\GetActiveTicketTypesAction;
 use App\Actions\Admin\Tickets\GetTicketTypesAction;
 use App\Actions\Admin\Tickets\GetVisitorTicketsAction;
 use App\Actions\Admin\Tickets\ToggleTicketTypeStatusAction;
 use App\Actions\Admin\Tickets\UpdateTicketTypeAction;
-use App\Actions\Admin\Tickets\CreateTicketTypeAction;
-use App\Actions\Admin\Tickets\GenerateDailyGateCodeAction;
 use App\Actions\Payment\InitiateTicketPaymentAction;
+use App\Actions\Visitor\InitialBookTicketsAction;
 use App\Http\Requests\Admin\AddTicketTypeRequest;
 use App\Http\Requests\Admin\BookTicketRequest;
 use App\Http\Requests\Admin\UpdateTicketTypeRequest;
@@ -20,8 +20,8 @@ use App\Jobs\payment\ProcessPaymeraWebhookJob;
 use App\Models\Payment;
 use App\Services\PaymeraService;
 use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class TicketController extends Controller

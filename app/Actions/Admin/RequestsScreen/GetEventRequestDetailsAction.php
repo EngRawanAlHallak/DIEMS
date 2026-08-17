@@ -13,7 +13,7 @@ class GetEventRequestDetailsAction
     public function execute(int $id)
     {
         $cacheKey = "admin:event_request_detail:{$id}";
-        Cache::forget($cacheKey);
+        //Cache::forget($cacheKey);
         //return Cache::tags(['company_requests'])->remember($cacheKey, now()->addHours(4), function () use ($id) {
         return Cache::remember($cacheKey, now()->addHours(4),function () use ($id) {
             $eventRequest = EventRequest::with([

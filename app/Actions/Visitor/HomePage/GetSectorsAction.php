@@ -10,7 +10,7 @@ class GetSectorsAction
     public function execute(string $lang)
     {
         //Cache::forget("home:sectors:{$lang}");
-        return /*Cache::tags(['sectors'])->*/Cache::remember("home:sectors:{$lang}", now()->addDays(1), function () {
+        return Cache::remember("home:sectors:{$lang}", now()->addDays(1), function () {
             return Sector::select('id', 'name')->get();
         });
     }

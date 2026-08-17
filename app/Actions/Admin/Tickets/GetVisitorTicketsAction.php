@@ -12,8 +12,8 @@ class GetVisitorTicketsAction
 {
     public function execute(string $guestId): mixed
     {
-        $cacheKey = "guest_tickets_{$guestId}";
-        Cache::forget($cacheKey);
+        $cacheKey = "visitor:tickets:{$guestId}";
+        //Cache::forget($cacheKey);
         return Cache::remember($cacheKey, now()->addDays(1), function () use ($guestId) {
 
             $allTickets = Ticket::with(['ticketType', 'ticketOrder'])
