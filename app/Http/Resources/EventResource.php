@@ -11,7 +11,7 @@ class EventResource extends JsonResource
 {
     public function toArray(Request $request)
     {
-        //$lang = app()->getLocale();
+        $lang = app()->getLocale();
 
         return [
             'id'          => $this->id,
@@ -30,7 +30,7 @@ class EventResource extends JsonResource
             'sector_id'   => $this->sector_id,
             'sector_name' => $this->sector->name,
             'hall_id'     => $this->hall_id,
-            'hall_name'   => $this->hall->name,
+            'hall_name'   => $this->hall?->name,
         ];
     }
 }

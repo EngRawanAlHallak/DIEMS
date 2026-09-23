@@ -3,61 +3,135 @@
 namespace App\Jobs\Company;
 
 use App\Models\EventRequest;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class UploadEventBannerJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
-    protected $eventRequest;
-    protected $tempPath;
-
-    public int $tries   = 3;
+    public int $tries = 3;
     public int $timeout = 60;
 
-    public function __construct(EventRequest $eventRequest, string $tempPath)
-    {
+    protected EventRequest $eventRequest;
+    protected string $tempPath;
+
+    public function __construct(
+        EventRequest $eventRequest,
+        string $tempPath
+    ) {
         $this->eventRequest = $eventRequest;
-        $this->tempPath     = $tempPath;
+        $this->tempPath = $tempPath;
     }
 
     public function handle(): void
     {
-        if (!Storage::disk('local')->exists($this->tempPath)) {
-            Log::warning("Temporary event image not found for request ID: {$this->eventRequest->id}");
+        $localDisk = Storage::disk('local');
+        $s3Disk = Storage::disk('s3');
+
+        if (!$localDisk->exists($this->tempPath)) {
+            Log::warning(
+                'Temporary event image not found',
+                [
+                    'event_request_id' => $this->eventRequest->id,
+                    'temp_path'        => $this->tempPath,
+                ]
+            );
+
             return;
         }
 
         try {
-            $fileContents = Storage::disk('local')->get($this->tempPath);
-            $fileName     = basename($this->tempPath) . '.jpg';
-            $s3Path       = "events/banners/{$this->eventRequest->id}_{$fileName}";
 
-            Storage::disk('s3')->put($s3Path, $fileContents, 'public');
+            /*
+             * اسم الملف المؤقت
+             */
+            $fileName = basename($this->tempPath);
 
+            /*
+             * Path داخل S3 فقط
+             *
+             * مثال:
+             * events/banners/8_abc123.jpg
+             */
+            $s3Path = sprintf(
+                'events/banners/%d_%s',
+                $this->eventRequest->id,
+                $fileName
+            );
+
+            /*
+             * رفع الملف إلى S3
+             */
+            $s3Disk->put(
+                $s3Path,
+                $localDisk->get($this->tempPath),
+                [
+                    'visibility' => 'public',
+                ]
+            );
+
+            /*
+             * مهم جداً:
+             *
+             * نخزن PATH فقط.
+             *
+             * لا نستخدم:
+             * Storage::disk('s3')->url($s3Path)
+             */
             $this->eventRequest->update([
-                'image' => Storage::disk('s3')->url($s3Path)
+                'image' => $s3Path,
             ]);
-        } catch (\Exception $e) {
-            Log::error("Failed to upload event banner to S3 (Request ID: {$this->eventRequest->id}): " . $e->getMessage());
+
+            Log::info(
+                'Event banner uploaded successfully',
+                [
+                    'event_request_id' => $this->eventRequest->id,
+                    's3_path'          => $s3Path,
+                    'db_image'         => $this->eventRequest->fresh()->image,
+                ]
+            );
+
+        } catch (\Throwable $e) {
+
+            Log::error(
+                'Failed to upload event banner to S3',
+                [
+                    'event_request_id' => $this->eventRequest->id,
+                    'temp_path'        => $this->tempPath,
+                    'error'            => $e->getMessage(),
+                ]
+            );
+
             throw $e;
+
         } finally {
-            Storage::disk('local')->delete($this->tempPath);
+
+            /*
+             * حذف النسخة المؤقتة من local
+             */
+            $localDisk->delete($this->tempPath);
         }
     }
 
     public function failed(\Throwable $e): void
     {
-        Log::error('[UploadEventBannerJob] Job failed completely', [
-            'event_request_id' => $this->eventRequest->id,
-            'error'            => $e->getMessage(),
-        ]);
+        Log::error(
+            '[UploadEventBannerJob] Job failed completely',
+            [
+                'event_request_id' => $this->eventRequest->id,
+                'temp_path'        => $this->tempPath,
+                'error'            => $e->getMessage(),
+            ]
+        );
 
         activity('system_error')
             ->performedOn($this->eventRequest)
@@ -69,6 +143,8 @@ class UploadEventBannerJob implements ShouldQueue
                 'trace'            => $e->getTraceAsString(),
                 'failed_at'        => now()->toDateTimeString(),
             ])
-            ->log("فشل رفع بنر الفعالية الخاصة بطلب الفعالية رقم (#{$this->eventRequest->id}): {$e->getMessage()}");
+            ->log(
+                "فشل رفع بنر الفعالية الخاصة بطلب الفعالية رقم (#{$this->eventRequest->id}): {$e->getMessage()}"
+            );
     }
 }

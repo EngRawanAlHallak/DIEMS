@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
+
 
 class CompanyProfileResource extends JsonResource
 {
@@ -15,7 +17,7 @@ class CompanyProfileResource extends JsonResource
             'company_email'      => $this->user ? $this->user->email : null,
             'company_phone'      => $this->user ? $this->user->phonenumber : null,
             'company_name'       => $this->name,
-            'logo'               => $this->logo ? asset('storage/' . $this->logo) : null,
+            'logo'               => $this->logo ? Storage::disk('s3')->url($this->logo) : null,
             'responsible_person' => $this->responsible_person,
             'sector'             => $this->sector,
             'sector_details'     => [

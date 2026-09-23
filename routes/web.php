@@ -35,3 +35,12 @@ Route::get('/event/payments/pay/{id}', [EventController::class, 'payDirectFromEm
 // for webhook job (ngrok url)
 Route::get('paymera/webhook/{payment_uuid}', [TicketController::class,'handleWebhook'])
     ->name('paymera.webhook');
+
+//nginx test
+Route::get('/server-info', function () {
+    return response()->json([
+        'status' => 'success',
+        'server_hostname' => gethostname(), // سيعيد معرّف الحاوية التي استجابت للطلب
+        'timestamp' => now()->toDateTimeString(),
+    ]);
+});

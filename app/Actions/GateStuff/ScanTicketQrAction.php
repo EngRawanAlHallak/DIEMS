@@ -5,13 +5,14 @@ namespace App\Actions\GateStuff;
 use App\Models\Ticket;
 use App\Traits\ApiResponse;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class ScanTicketQrAction
 {
     use ApiResponse;
     public function execute(string $qrUuid)
     {
-        $ticket = Ticket::with(['ticketType:id,name', 'ticketOrder:id,payment_status'])
+        $ticket = Ticket::with(['ticketType:id,name', 'ticketOrder:id,payment_status,guest_id'])
             ->where('uuid', $qrUuid)
             ->first();
 
@@ -40,6 +41,8 @@ class ScanTicketQrAction
                 'visitor_name' => $ticket->visitor_name,
                 'ticket_type'  => $ticket->ticketType->getTranslation('name', 'ar', false) ?? $ticket->ticketType->getTranslation('name', 'en', false),
             ];
+
+            Cache::forget("visitor:tickets:{$ticket->ticketOrder->guest_id}");
             return $this->success($data , 'QR code GRANTED');
         }
 

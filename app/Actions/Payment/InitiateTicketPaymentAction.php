@@ -40,15 +40,10 @@ class InitiateTicketPaymentAction
 
         // 3. التجهيز للاتصال بـ Paymera
         $paymentUuid = (string) Str::uuid();
-        //$callbackUrl = route('payment.success');//config('app.frontend_url') ;//. "/tickets/checkout/callback?order_uuid={$order->uuid}";'http://127.0.0.1:8080/payment/success';
         $callbackUrl = url("/payment/callback?payment_uuid={$paymentUuid}");
-        /*
-         * 💡 لاحقاً عندما يجهز الفرونت إند، ستقومين فقط بتغيير السطر أعلاه إلى:
-         * $callbackUrl = config('app.frontend_url') . "/payment/success?payment_uuid={$paymentUuid}";
-         */
-        $webhookPath = route('paymera.webhook', ['payment_uuid' => $paymentUuid], false);
+        //$webhookPath = route('paymera.webhook', ['payment_uuid' => $paymentUuid], false);
+        $webhookPath = "https://webhook.site/c25d188f-f432-419a-951e-1a2fafc45f74";
         $triggerUrl  = env('NGROK_URL', config('app.url')) . $webhookPath;  //'https://webhook.site/e33fda29-729b-4088-80f9-b1bbe7c61a7f';  // دمج رابط ngrok مع مسار الـ Webhook (وفي حال عدم وجود ngrok، يعود للرابط الأساسي كحالة احتياطية)
-        //print $triggerUrl;
 
         // طلب إنشاء الدفع من Service
         $paymeraResponse = $this->paymeraService->createPayment(

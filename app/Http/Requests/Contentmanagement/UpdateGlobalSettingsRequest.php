@@ -38,7 +38,7 @@ class UpdateGlobalSettingsRequest extends FormRequest
 
             // مخطط أرض المعرض (Fairgrounds Plan)
             'cp_fairgrounds_plan_title'  => 'sometimes|nullable',
-            'cp_fairgrounds_plan_image'  => 'sometimes|nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'cp_fairgrounds_plan_image'  => 'sometimes|nullable|image|mimes:jpeg,png,jpg,webp,svg|max:20480',
 
             // شروط وأحكام التسجيل (cp_registration)
             'cp_registration_terms'      => 'sometimes|nullable|array',

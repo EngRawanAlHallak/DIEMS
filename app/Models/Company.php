@@ -60,12 +60,12 @@ class Company extends Model
     // ─── Scopes ─────────────────────────────────────
     public function scopeActive($query)
     {
-        return $query->where('is_active', true);
-        /*return $query->where('is_active', true)
-        ->whereHas('companyRequest', function ($q) {
-            $q->where('request_status', 'approved')
-                ->where('payment_status', 'paid')
-        )};*/
+        //return $query->where('is_active', true);
+        return $query->where('is_active', true)
+            ->whereHas('requests', function ($q) {
+                $q->where('request_status', 'approved')
+                    ->whereIn('payment_status', ['paid', 'partial_paid']);
+            });
     }
 
     public function scopeBySector($query, int $sectorId)

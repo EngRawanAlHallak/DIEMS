@@ -560,40 +560,33 @@ class CompanyController extends Controller
         return $this->success($result, 'payment successfully');
     }
 
-    public function verifyPayment(Request $request, PaymeraService $paymeraService): JsonResponse
+    public function verifyPayment(Request $request, PaymeraService $paymeraService)
     {
         $paymentUuid = $request->query('payment_uuid');
 
+        // رابط الفرونت إند الذي نريد توجيه المستخدم إليه في النهاية
+        $frontendDashboardUrl = config('app.com_frontend_url') . "companies/dashboard/payments";
+
         if (!$paymentUuid) {
-            return response()->json(['status' => 'error', 'message' => 'Missing payment UUID.'], 400);
+            return redirect()->away($frontendDashboardUrl . '?status=error&message=' . urlencode('رابط غير صالح أو مفقود.'));
         }
 
         $payment = Payment::where('uuid', $paymentUuid)->first();
 
         if (!$payment) {
-            return response()->json(['status' => 'error', 'message' => 'Payment record not found.'], 404);
+            return redirect()->away($frontendDashboardUrl . '?status=error&message=' . urlencode('لم يتم العثور على سجل الدفع.'));
         }
 
+        // هنا يتم التحقق الفعلي من بوابه الدفع والتحديث في الداتا بيز (بدون تدخل الفرونت)
         $isPaid = $paymeraService->verifyAndProcessPayment($payment);
 
         if ($isPaid) {
-            $payable = $payment->payable()->first();
-
-            return response()->json([
-                'status'  => 'success',
-                'message' => 'تم تأكيد الدفعة بنجاح.',
-                'data'    => [
-                    'paid_amount'      => (float) $payable->paid_amount,
-                    'remaining_amount' => (float) max(0, $payable->total_price - $payable->paid_amount),
-                    'payment_status'   => $payable->payment_status, // سيرجع paid أو partial_paid
-                ]
-            ]);
+            // توجيه المتصفح فوراً إلى الفرونت إند مع رسالة نجاح
+            return redirect()->away($frontendDashboardUrl . '?status=success&message=' . urlencode('تم تأكيد الدفعة بنجاح.'));
         }
 
-        return response()->json([
-            'status'  => 'error',
-            'message' => 'فشلت عملية الدفع أو تم إلغاؤها من قبل المستخدم.'
-        ], 400);
+        // توجيه المتصفح إلى الفرونت إند مع رسالة فشل
+        return redirect()->away($frontendDashboardUrl . '?status=error&message=' . urlencode('فشلت عملية الدفع أو تم إلغاؤها.'));
     }
 
 }

@@ -31,7 +31,7 @@ class StoreEventRequest extends FormRequest
             'event_description'    => 'required|string',
             'Expected_attendance'  => 'required|integer|min:1',
             'equipment_needed'     => 'nullable|string',
-            'image'                => 'nullable|file|image|mimes:jpeg,png,jpg|max:10240', // حد أقصى 10 ميغا
+            'image'                => 'nullable|file|image|mimes:jpeg,png,jpg|max:1000240', // حد أقصى 10 ميغا
        ];
     }
 }

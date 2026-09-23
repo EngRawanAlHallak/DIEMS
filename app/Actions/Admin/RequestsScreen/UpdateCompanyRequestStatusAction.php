@@ -71,8 +71,9 @@ class UpdateCompanyRequestStatusAction extends BaseAction
                     );
 
                     // تحويل الرابط ليوجه للـ Frontend (React) مع إرفاق التوقيع كـ Query String
-                    $frontendBase = config('app.frontend_url') . 'companies/register';
+                    $frontendBase = config('app.com_frontend_url') . 'companies/register';
                     $amendmentUrl = $frontendBase . '?' . parse_url($backendSignedUrl, PHP_URL_QUERY);
+                    print $amendmentUrl;
 
 
                     $companyRequest->update([

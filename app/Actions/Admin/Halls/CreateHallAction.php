@@ -18,6 +18,7 @@ class CreateHallAction extends BaseAction
         return $this->executeAction(
             function () use ($data) {
                 $translatedName = $this->translator->execute($data['name']);
+
                 $data['name'] = $translatedName;
 
                 $hall = Hall::create($data);

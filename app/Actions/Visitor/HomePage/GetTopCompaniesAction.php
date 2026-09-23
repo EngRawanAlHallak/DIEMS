@@ -10,8 +10,14 @@ class GetTopCompaniesAction
     public function execute(string $lang)
     {
         return Cache::remember("home:top_companies:{$lang}", now()->addHour(5), function () {
+            /*return Company::where('is_active', true)
+                //->inRandomOrder()
+                ->take(10)
+                ->select('id', 'name', 'logo')
+                ->get();*/
             return Company::where('is_active', true)
-                ->inRandomOrder()
+                ->where('logo', 'not like', '%seed%')
+                //->inRandomOrder()
                 ->take(10)
                 ->select('id', 'name', 'logo')
                 ->get();

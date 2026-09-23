@@ -10,7 +10,7 @@ class GetWeeklyEventsAction
 {
     public function execute(string $startDate, string $endDate, string $lang)
     {
-        //Cache::forget("home:weekly_events:{$startDate}:{$lang}");
+        Cache::forget("home:weekly_events:{$startDate}:{$lang}");
         return Cache::remember("home:weekly_events:{$startDate}:{$lang}", now()->addHours(2), function () use ($startDate, $endDate) {
             return EventRequest::query()
                 ->paid() // استخدام الـ Scope الذي أنشأناه
@@ -24,19 +24,5 @@ class GetWeeklyEventsAction
                 ->orderBy('event_slots.start_time')
                 ->get();
         });
-        /*return Cache::remember("home:weekly_events:{$startDate}:{$lang}", now()->addHours(2), function () use ($startDate, $endDate) {
-            return EventRequest::query()
-                ->where('request_status', 'approved')
-                ->where('payment_status', 'paid')
-                ->whereHas('slot', fn($q) => $q->whereBetween('slot_date', [$startDate, $endDate]))
-                ->with(['slot:id,slot_date,start_time', 'sector:id,name', 'hall:id,name'])
-                ->select('id', 'event_title', 'image', 'slot_id', 'sector_id')
-                ->orderBy(
-                    EventSlot::select('start_time')
-                        ->whereColumn('event_slots.id', 'event_requests.slot_id')
-                        ->limit(1)
-                )
-                ->get();
-        });*/
     }
 }

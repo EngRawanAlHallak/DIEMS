@@ -16,6 +16,7 @@ class GetParticipatingCompaniesAction
             ->paginate(3, ['*'], 'page', $page);*/
         return Company::query()
             ->where('is_active', true)
+            ->where('logo', 'not like', '%seed%')
             ->with([
                 'sector_relation:id,name',
                 'booths:id,company_id,hall_id',

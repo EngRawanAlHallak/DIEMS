@@ -93,6 +93,7 @@ class PaymeraService
     public function verifyAndProcessPayment(Payment $payment): bool
     {
         Log::info("in service : verify ");
+
         // Idempotency: إذا كان مدفوعاً مسبقاً، نعتبر العملية ناجحة مباشرة
         if ($payment->status === 'paid') {
             return true;

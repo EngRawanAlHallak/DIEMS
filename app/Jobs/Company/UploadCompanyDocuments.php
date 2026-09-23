@@ -24,6 +24,7 @@ class UploadCompanyDocuments implements ShouldQueue
 
     public function handle(): void
     {
+        Log::info('in job');
         foreach ($this->tempFiles as $fileData) {
             if (Storage::disk('local')->exists($fileData['temp_path'])) {
                 $fileContents = Storage::disk('local')->get($fileData['temp_path']);

@@ -49,16 +49,15 @@ class InitiateRemainingPaymentAction
 
             // 4. تجهيز الروابط للعملية الجديدة
             $paymentUuid = (string) Str::uuid();
-            //$callbackUrl = config('app.frontend_url') . "/company/payment/callback?payment_uuid={$paymentUuid}";
             $callbackUrl = url("/payment/verify?payment_uuid={$paymentUuid}");
-            $webhookPath = route('paymera.webhook', ['payment_uuid' => $paymentUuid], false);
-            $triggerUrl  = env('NGROK_URL', config('app.url')) . $webhookPath;
+            $webhookPath = "https://webhook.site/c25d188f-f432-419a-951e-1a2fafc45f74";
+            //$triggerUrl  = env('NGROK_URL', config('app.url')) . $webhookPath;
 
             // 5. إنشاء رابط الدفع من Paymera
             $paymeraResponse = $this->paymeraService->createPayment(
                 amount: $amountToPay,
                 callbackUrl: $callbackUrl,
-                triggerUrl: $triggerUrl,
+                triggerUrl: $webhookPath,
                 notes: "Remaining Payment for Company Request ID: {$companyRequest->id}"
             );
 

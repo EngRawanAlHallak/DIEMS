@@ -37,10 +37,11 @@ class CreateEventSlotAction extends BaseAction
                 // 2. إنشاء الـ Slot
                 $newSlot = EventSlot::create($data);
 
-                /*// 3. بث الحدث الفوري للواجهات (WebSocket)
-                broadcast(new NewSlotCreated($newSlot))->toOthers();
+                // 3. بث الحدث الفوري للواجهات (WebSocket)
+                //broadcast(new NewSlotCreated($newSlot))->toOthers();
                 // 3. مسح كاش المخطط الزمني
-                Cache::forget("admin:events_timeline:all");*/
+                //Cache::forget("admin:events_timeline:all");
+
                 Log::info('BEFORE BROADCAST', ['slot_id' => $newSlot->id]);
                 try {
                     broadcast(new NewSlotCreated($newSlot))->toOthers();

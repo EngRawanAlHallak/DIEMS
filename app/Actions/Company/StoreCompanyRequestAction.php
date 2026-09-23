@@ -8,6 +8,7 @@ use App\Models\CompanyRequest;
 use App\Models\PricingTier;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class StoreCompanyRequestAction
 {
@@ -82,6 +83,7 @@ class StoreCompanyRequestAction
             // 3. إطلاق الـ Job إذا كانت المصفوفة غير فارغة
             if (!empty($tempFiles)) {
                 // للتجربة المباشرة ورؤية الأخطاء فوراً يمكنك استخدام dispatchSync مؤقتاً
+                Log::info('in if condition');
                 UploadCompanyDocuments::dispatch($companyRequest, $tempFiles);
             }
 

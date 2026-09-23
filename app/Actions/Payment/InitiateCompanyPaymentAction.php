@@ -57,7 +57,8 @@ class InitiateCompanyPaymentAction
         $paymentUuid = (string) Str::uuid();
         //$callbackUrl = config('app.frontend_url') . "/payment/callback?type=company&id={$companyRequest->id}";
         $callbackUrl = url("/payment/callback?payment_uuid={$paymentUuid}");
-        $webhookPath = route('paymera.webhook', ['payment_uuid' => $paymentUuid], false);
+        $webhookPath = "https://webhook.site/c25d188f-f432-419a-951e-1a2fafc45f74";
+        //$webhookPath = route('paymera.webhook', ['payment_uuid' => $paymentUuid], false);
         $triggerUrl  = env('NGROK_URL', config('app.url')) . $webhookPath;
 
         // المبلغ المطلوب (الدفعة الأولى Required Deposit مثلاً)
